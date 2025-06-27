@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Curzr{% endblock %}
+
+{% block content %}
+<div class="auth-form-container">
+    <h1 class="mb-2 text-center">Login</h1>
+
+    {% if form.errors %}
+        <div class="message message-error mb-1">
+            Your username and password didn't match. Please try again.
+            <button class="close-message" onclick="this.parentElement.style.display='none';" aria-label="Close message">×</button>
+        </div>
+    {% endif %}
+
+    {% if next %}
+        {% if user.is_authenticated %}
+        <p class="text-center">Your account doesn't have access to this page. To proceed,
+        please login with an account that has access.</p>
+        {% else %}
+        {# <p class="text-center">Please login to see this page.</p> #}
+        {% endif %}
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}" class="styled-form">
+        {% csrf_token %}
+        
+        {# Manual rendering for better control and styling #}
+        <div class="form-group mb-1">
+            <label for="{{ form.username.id_for_label }}">Username:</label>
+            {{ form.username }} {# This will pick up input styles from main.css #}
+            {% for error in form.username.errors %}
+                <div class="message message-error p-1 mt-sm">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group mb-1">
+            <label for="{{ form.password.id_for_label }}">Password:</label>
+            {{ form.password }} {# This will pick up input styles from main.css #}
+            {% for error in form.password.errors %}
+                <div class="message message-error p-1 mt-sm">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <input type="hidden" name="next" value="{{ next }}">
+        
+        <button type="submit" class="btn btn-primary btn-lg mt-2" style="width: 100%;">Login</button>
+    </form>
+
+    <p class="mt-2 text-center">
+        <a href="{% url 'password_reset' %}">Forgot password?</a>
+    </p>
+    <p class="text-center">
+        Don't have an account? <a href="{% url 'register' %}">Register here</a>
+    </p>
+</div>
+{% endblock %}

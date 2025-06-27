@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sign Up - Curzr{% endblock %}
+
+{% block content %}
+<div class="auth-form-container">
+    <h1 class="mb-2 text-center">Create an Account</h1>
+
+    <form method="post" action="{% url 'register' %}" class="styled-form">
+        {% csrf_token %}
+        
+        {# Manual rendering for consistent styling #}
+        {% for field in form %}
+            <div class="form-group mb-1">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="message message-error p-1 mt-sm" style="font-size:0.85rem; padding:0.5rem 0.75rem;">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-primary btn-lg mt-2" style="width: 100%;">Register</button>
+    </form>
+    <p class="mt-2 text-center">
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+    </p>
+</div>
+{% endblock %}
